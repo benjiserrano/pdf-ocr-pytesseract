@@ -3,13 +3,15 @@ services:
     build: .
     container_name: ocr-api
     restart: unless-stopped
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
+    env_file:
+      - .env
     environment:
-      OCR_DEFAULT_LANG: "spa+eng"
-      OCR_DEFAULT_DPI: "300"
-      OCR_DEFAULT_TESS_CONFIG: "--oem 3 --psm 6"
-      OCR_MAX_FILE_SIZE_MB: "30"
-      OCR_AUTO_DETECT_LANG: "false"
-      OCR_LANG_CANDIDATES: "spa,cat,eus,eng,spa+eng,cat+spa,eus+spa"
-      OCR_LANG_SAMPLE_PAGES: "2"
+      OCR_DEFAULT_LANG: ${OCR_DEFAULT_LANG}
+      OCR_DEFAULT_DPI: ${OCR_DEFAULT_DPI}
+      OCR_DEFAULT_TESS_CONFIG: ${OCR_DEFAULT_TESS_CONFIG}
+      OCR_MAX_FILE_SIZE_MB: ${OCR_MAX_FILE_SIZE_MB}
+      OCR_AUTO_DETECT_LANG: ${OCR_AUTO_DETECT_LANG}
+      OCR_LANG_CANDIDATES: ${OCR_LANG_CANDIDATES}
+      OCR_LANG_SAMPLE_PAGES: ${OCR_LANG_SAMPLE_PAGES}
