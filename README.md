@@ -46,10 +46,11 @@ Respuesta (ejemplo):
   "language": "spa+eng",
   "pages": 2,
   "results": [
-    {"page": 1, "text": "Texto de la pagina 1"},
-    {"page": 2, "text": "Texto de la pagina 2"}
+    {"page": 1, "text": "Texto de la pagina 1", "clean_text": "Texto limpio para RAG pagina 1"},
+    {"page": 2, "text": "Texto de la pagina 2", "clean_text": "Texto limpio para RAG pagina 2"}
   ],
-  "full_text": "Texto de la pagina 1\n\nTexto de la pagina 2"
+  "full_text": "Texto de la pagina 1\n\nTexto de la pagina 2",
+  "full_text_clean": "Texto limpio para RAG pagina 1\n\nTexto limpio para RAG pagina 2"
 }
 ```
 
@@ -59,6 +60,8 @@ Respuesta (ejemplo):
 - `OCR_DEFAULT_DPI` (default: `300`)
 - `OCR_DEFAULT_TESS_CONFIG` (default: `--oem 3 --psm 6`)
 - `OCR_MAX_FILE_SIZE_MB` (default: `30`)
+- `OCR_PREPROCESS_IMAGE` (default: `true`) preprocesado de imagen antes de OCR
+- `OCR_NORMALIZE_FOR_RAG` (default: `true`) limpieza de ruido OCR para indexación
 - `TESSERACT_CMD` (opcional, ruta custom al binario `tesseract`)
 
 ## 4) Endpoints
@@ -70,6 +73,8 @@ Parámetros de query de `POST /ocr/pdf`:
 - `lang`: idioma o combinación (`spa`, `eng`, `spa+eng`)
 - `dpi`: 100-600
 - `config`: parámetros extra para Tesseract
+- `preprocess_image`: aplica limpieza de imagen previa (true/false)
+- `normalize_for_rag`: limpia artefactos típicos OCR para RAG (true/false)
 - `first_page`: primera página a procesar (opcional)
 - `last_page`: última página a procesar (opcional)
 
