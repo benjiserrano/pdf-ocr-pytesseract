@@ -10,3 +10,6 @@ services:
       OCR_DEFAULT_DPI: "300"
       OCR_DEFAULT_TESS_CONFIG: "--oem 3 --psm 6"
       OCR_MAX_FILE_SIZE_MB: "30"
+      OCR_AUTO_DETECT_LANG: "false"
+      OCR_LANG_CANDIDATES: "spa,cat,eus,eng,spa+eng,cat+spa,eus+spa"
+      OCR_LANG_SAMPLE_PAGES: "2"

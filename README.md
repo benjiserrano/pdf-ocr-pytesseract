@@ -2,6 +2,9 @@
 
 Microservicio para extraer texto de archivos PDF usando OCR con `pytesseract`.
 
+Incluye modo escalable para licitaciones multilingües (castellano/catalán/euskera/inglés)
+con autodetección opcional de idioma OCR.
+
 ## 1) Ejecutar con Docker
 
 ### Build
@@ -45,6 +48,8 @@ Respuesta (ejemplo):
   "filename": "documento.pdf",
   "language": "spa+eng",
   "pages": 2,
+  "detected_language": "spa+eng",
+  "auto_detected_language": false,
   "results": [
     {"page": 1, "text": "Texto de la pagina 1", "clean_text": "Texto limpio para RAG pagina 1"},
     {"page": 2, "text": "Texto de la pagina 2", "clean_text": "Texto limpio para RAG pagina 2"}
@@ -62,6 +67,10 @@ Respuesta (ejemplo):
 - `OCR_MAX_FILE_SIZE_MB` (default: `30`)
 - `OCR_PREPROCESS_IMAGE` (default: `true`) preprocesado de imagen antes de OCR
 - `OCR_NORMALIZE_FOR_RAG` (default: `true`) limpieza de ruido OCR para indexación
+- `OCR_STRIP_REPEATED_LINES` (default: `true`) elimina cabeceras/pies repetidos entre páginas
+- `OCR_AUTO_DETECT_LANG` (default: `false`) activa autodetección de idioma OCR
+- `OCR_LANG_CANDIDATES` (default: `spa,cat,eus,eng,spa+eng,cat+spa,eus+spa`) candidatos para autodetección
+- `OCR_LANG_SAMPLE_PAGES` (default: `2`) páginas iniciales usadas para detectar idioma
 - `TESSERACT_CMD` (opcional, ruta custom al binario `tesseract`)
 
 ## 4) Endpoints
@@ -75,13 +84,24 @@ Parámetros de query de `POST /ocr/pdf`:
 - `config`: parámetros extra para Tesseract
 - `preprocess_image`: aplica limpieza de imagen previa (true/false)
 - `normalize_for_rag`: limpia artefactos típicos OCR para RAG (true/false)
+- `strip_repeated_lines`: elimina líneas repetidas de cabecera/pie en la salida limpia (true/false)
+- `auto_detect_lang`: autodetecta el idioma OCR según confianza (true/false)
+- `lang_candidates`: CSV de idiomas candidatos para autodetección
+- `lang_sample_pages`: número de páginas iniciales para detección de idioma (1-5)
 - `first_page`: primera página a procesar (opcional)
 - `last_page`: última página a procesar (opcional)
 
 Archivo multipart:
 - `file`: PDF
 
-## 5) Despliegue recomendado en VPS
+## 5) Recomendaciones para distintas regiones/licencias
+
+- Si el origen es heterogéneo (Castilla + Euskadi + Cataluña), activa `auto_detect_lang=true`.
+- Si conoces el idioma por fuente, usa modo manual (`lang=...`) para máxima velocidad.
+- Para pliegos mixtos, prioriza combinaciones en candidatos (`cat+spa`, `eus+spa`) para reducir errores.
+- Para RAG, indexa `full_text_clean` y conserva `full_text` para trazabilidad.
+
+## 6) Despliegue recomendado en VPS
 
 1. Abrir el puerto `8000` o publicarlo detrás de Nginx/Caddy.
 2. Usar `docker compose up -d --build`.
