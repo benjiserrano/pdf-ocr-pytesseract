@@ -1,0 +1,12 @@
+services:
+  ocr-api:
+    build: .
+    container_name: ocr-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      OCR_DEFAULT_LANG: "spa+eng"
+      OCR_DEFAULT_DPI: "300"
+      OCR_DEFAULT_TESS_CONFIG: "--oem 3 --psm 6"
+      OCR_MAX_FILE_SIZE_MB: "30"
